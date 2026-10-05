@@ -1,13 +1,14 @@
-const CACHE_NAME = "practical-hub-v2";
+const CACHE_NAME = "practical-hub-v3";
 
-const FILES_TO_CACHE = [
+const APP_FILES = [
     "./",
     "./index.html",
     "./style.css",
     "./app.js",
-    "./manifest.json",
+    "./manifest.json"
+];
 
-    // OS Practicals
+const PDF_FILES = [
     "./DOC-20260907-WA0013.pdf",
     "./DOC-20260907-WA0014.pdf",
     "./DOC-20260907-WA0015.pdf",
@@ -27,12 +28,24 @@ self.addEventListener("install", event => {
 
     event.waitUntil(
 
-        caches.open(CACHE_NAME)
-            .then(cache => {
+        caches.open(CACHE_NAME).then(async cache => {
 
-                return cache.addAll(FILES_TO_CACHE);
+            // Cache website files
+            await cache.addAll(APP_FILES);
 
-            })
+            // Cache PDFs individually
+            // If one PDF fails, the whole Service Worker won't fail
+            for (const pdf of PDF_FILES) {
+
+                try {
+                    await cache.add(pdf);
+                } catch (error) {
+                    console.log("Could not cache:", pdf);
+                }
+
+            }
+
+        })
 
     );
 
@@ -66,6 +79,25 @@ self.addEventListener("activate", event => {
 // FETCH
 self.addEventListener("fetch", event => {
 
+    // Handle opening/navigating to the website
+    if (event.request.mode === "navigate") {
+
+        event.respondWith(
+
+            fetch(event.request)
+                .catch(() => {
+
+                    return caches.match("./index.html");
+
+                })
+
+        );
+
+        return;
+    }
+
+
+    // Handle PDFs, CSS, JS, images, etc.
     event.respondWith(
 
         caches.match(event.request)
@@ -80,15 +112,25 @@ self.addEventListener("fetch", event => {
                 return fetch(event.request)
                     .then(response => {
 
-                        // Save new files/resources into cache
-                        const responseClone = response.clone();
+                        if (
+                            response &&
+                            response.status === 200 &&
+                            response.type === "basic"
+                        ) {
 
-                        caches.open(CACHE_NAME)
-                            .then(cache => {
+                            const responseClone = response.clone();
 
-                                cache.put(event.request, responseClone);
+                            caches.open(CACHE_NAME)
+                                .then(cache => {
 
-                            });
+                                    cache.put(
+                                        event.request,
+                                        responseClone
+                                    );
+
+                                });
+
+                        }
 
                         return response;
 
