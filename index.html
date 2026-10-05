@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="Practical PDF Hub - Access all practical files in one place">
+
+    <title>Practical Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="logo">📚</div>
+
+            <div>
+                <h1>Practical Hub</h1>
+                <p>All your practicals in one place</p>
+            </div>
+        </div>
+
+        <div id="offlineStatus" class="status">
+            🟢 Online
+        </div>
+    </header>
+
+
+    <main>
+
+        <section class="hero">
+            <h2>Your Practical Library</h2>
+
+            <p>
+                Access your practical PDFs anytime, even without internet.
+            </p>
+
+            <div class="search-box">
+                🔎
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search practicals..."
+                >
+            </div>
+        </section>
+
+
+        <section id="subjects" class="subjects">
+
+            <!-- SUBJECT CARDS WILL COME HERE -->
+
+            <div class="empty-message">
+                <h3>📂 No practicals added yet</h3>
+
+                <p>
+                    Add your PDF files and subjects to
+                    <strong>app.js</strong>.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>Practical Hub • Offline First</p>
+    </footer>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
